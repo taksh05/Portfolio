@@ -1,0 +1,8 @@
+{
+  "name": "taksh-paneri-3d-portfolio",
+  "version": "1.0.0",
+  "description": "3D scrollable interactive portfolio website",
+  "scripts": {
+    "dev": "npx http-server -p 3000"
+  }
+}
