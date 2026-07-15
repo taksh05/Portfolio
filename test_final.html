@@ -1,0 +1,3095 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taksh Paneri | 3D Portfolio & XR Developer</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description"
+        content="Portfolio of Taksh Paneri - AR/VR Developer, Full-Stack MERN Engineer, and Google Student Ambassador. Explore interactive 3D experiences, projects in Unity, Blender, and Three.js.">
+    <meta name="keywords"
+        content="Taksh Paneri, Portfolio, 3D Portfolio, AR VR, Unity, Blender, Three.js, React, MERN, Udaipur, Chitkara, Google Student Ambassador">
+    <meta name="author" content="Taksh Paneri">
+
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Style Sheet -->
+    <style>
+/* ==========================================================================
+   Tactile & Visual Premium 3D Theme Stylesheet - Taksh Paneri
+   ========================================================================== */
+
+/* --- CSS Variables --- */
+
+:root {
+    --bg-color: #03030c;
+    --card-bg: rgba(11, 12, 30, 0.5);
+    --card-bg-hover: rgba(18, 20, 50, 0.7);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --border-hover: rgba(0, 240, 255, 0.4);
+    
+    --text-primary: #f3f4f6;
+    --text-secondary: #9ca3af;
+    --text-muted: #6b7280;
+    
+    --color-cyan: #00f0ff;
+    --color-purple: #bd00ff;
+    --color-yellow: #ffb800;
+    --color-magenta: #ff007a;
+    
+    --font-primary: 'Outfit', sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+    
+    --glow-cyan: 0 0 20px rgba(0, 240, 255, 0.25);
+    --glow-purple: 0 0 20px rgba(189, 0, 255, 0.25);
+    --glow-yellow: 0 0 20px rgba(255, 184, 0, 0.25);
+    
+    --transition-smooth: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    --cursor-color: rgba(0, 240, 255, 0.3);
+}
+
+/* --- Base & Reset --- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    scroll-behavior: smooth;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    overflow-x: hidden;
+    line-height: 1.6;
+    cursor: none; /* Hide default cursor to use custom 3D cursor */
+}
+
+a, button {
+    cursor: none; /* Ensure cursor isn't reset on interactive elements */
+}
+#typed-text{
+    font-size: inherit;   /* parent wali size lega */
+    font-weight: 600;
+    background: linear-gradient(90deg,#00e5ff,#8b5cf6);
+    -webkit-background-clip:text;
+    -webkit-text-fill-color:transparent;
+}
+.typed-cursor{
+    color:#00e5ff;
+    font-weight:bold;
+    animation:blink 1s infinite;
+}
+
+@keyframes blink{
+    50%{
+        opacity:0;
+    }
+}
+.hero-description{
+   margin-bottom:50px;
+}
+.info-card{
+    display:flex;
+    flex-direction:column;
+    gap:15px;
+    margin-top:20px;
+}
+
+.info-item{
+    display:flex;
+    align-items:center;
+    gap:15px;
+    padding:15px;
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:15px;
+    transition:.3s;
+}
+
+.info-item:hover{
+    transform:translateX(10px);
+    border-color:#00e5ff;
+    box-shadow:0 0 20px rgba(0,229,255,.2);
+}
+
+.info-item span{
+    font-size:24px;
+}
+/* --- WebGL Canvas Background --- */
+#webgl-canvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: auto; /* Allow dragging/manipulation of the 3D scene */
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #020207;
+}
+::-webkit-scrollbar-thumb {
+    background: rgba(189, 0, 255, 0.3);
+    border-radius: 4px;
+    border: 2px solid #020207;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 240, 255, 0.6);
+}
+
+/* --- Scroll Progress Bar --- */
+#scroll-progress-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    z-index: 1001;
+    background: rgba(255, 255, 255, 0.05);
+}
+#scroll-progress {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, var(--color-purple), var(--color-cyan));
+    box-shadow: 0 0 10px var(--color-cyan);
+}
+
+/* --- Custom Cursor --- */
+.custom-cursor {
+    width: 8px;
+    height: 8px;
+    background: var(--color-cyan);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9999;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s, background-color 0.2s;
+    box-shadow: 0 0 10px var(--color-cyan);
+}
+
+.custom-cursor-glow {
+    width: 40px;
+    height: 40px;
+    border: 1px solid var(--color-purple);
+    border-radius: 50%;
+    position: fixed;
+    pointer-events: none;
+    z-index: 9998;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease-out, width 0.3s, height 0.3s, border-color 0.3s;
+    background: rgba(189, 0, 255, 0.03);
+    box-shadow: inset 0 0 10px rgba(189, 0, 255, 0.15);
+}
+
+/* Cursor Hover States */
+.cursor-hover .custom-cursor {
+    width: 14px;
+    height: 14px;
+    background-color: var(--color-magenta);
+    box-shadow: 0 0 15px var(--color-magenta);
+}
+.cursor-hover .custom-cursor-glow {
+    width: 60px;
+    height: 60px;
+    border-color: var(--color-magenta);
+    background: rgba(255, 0, 122, 0.05);
+    box-shadow: inset 0 0 15px rgba(255, 0, 122, 0.2);
+}
+
+/* --- Header / Navigation --- */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 1.5rem 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 1000;
+    background: rgba(3, 3, 12, 0.4);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--border-color);
+    transition: var(--transition-smooth);
+}
+
+header.scrolled {
+    padding: 1rem 5%;
+    background: rgba(3, 3, 12, 0.8);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+}
+
+.logo a {
+    color: var(--text-primary);
+    text-decoration: none;
+    font-size: 1.3rem;
+    font-weight: 800;
+    font-family: var(--font-mono);
+    letter-spacing: 1px;
+}
+
+.logo-glow {
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 2.5rem;
+}
+
+.nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+    position: relative;
+    padding: 0.5rem 0;
+}
+
+.nav-num {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-purple);
+    margin-right: 0.2rem;
+}
+
+.nav-link:hover {
+    color: var(--text-primary);
+    text-shadow: 0 0 8px rgba(255,255,255,0.5);
+}
+
+.nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--color-purple), var(--color-cyan));
+    transition: var(--transition-smooth);
+}
+
+.nav-link:hover::after {
+    width: 100%;
+}
+
+.header-socials {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.header-socials a {
+    color: var(--text-secondary);
+    font-size: 1.2rem;
+    transition: var(--transition-smooth);
+}
+
+.header-socials a:hover {
+    color: var(--color-cyan);
+    transform: translateY(-2px);
+    text-shadow: var(--glow-cyan);
+}
+
+/* --- Layout Structure --- */
+main {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    pointer-events: none; /* Let clicks pass through core empty layout to Three.js canvas */
+}
+
+section {
+    min-height: 100vh;
+    padding: 8rem 10% 4rem 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    pointer-events: auto; /* Re-enable clicks on text containers */
+}
+
+/* --- Utilities & Grid --- */
+.grid {
+    display: grid;
+    gap: 2rem;
+}
+
+.grid-2 {
+    grid-template-columns: 1fr 1fr;
+}
+
+.grid-3 {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+/* Glassmorphism Cards */
+.glass-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(12px) saturate(180%);
+    -webkit-backdrop-filter: blur(12px) saturate(180%);
+    border-radius: 16px;
+    padding: 2.5rem;
+    position: relative;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    pointer-events: auto;
+}
+
+.hover-glow:hover {
+    transform: translateY(-5px);
+    background: var(--card-bg-hover);
+    border-color: var(--border-hover);
+    box-shadow: 0 10px 30px rgba(0, 240, 255, 0.1),
+                inset 0 0 15px rgba(0, 240, 255, 0.05);
+}
+
+.section-title {
+    margin-bottom: 4rem;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    pointer-events: auto;
+}
+
+.section-title h2 {
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--text-primary);
+}
+
+.title-num {
+    font-family: var(--font-mono);
+    color: var(--color-cyan);
+    font-size: 1.5rem;
+    text-shadow: var(--glow-cyan);
+}
+
+.title-line {
+    height: 1px;
+    flex-grow: 1;
+    background: linear-gradient(90deg, var(--color-cyan), transparent);
+}
+
+/* --- Interactive Buttons --- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.8rem;
+    padding: 0.85rem 2rem;
+    border-radius: 30px;
+    font-family: var(--font-primary);
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, var(--color-purple), var(--color-cyan));
+    color: #000;
+    border: none;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 25px rgba(0, 240, 255, 0.5);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--text-primary);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(5px);
+}
+
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: var(--color-purple);
+    box-shadow: var(--glow-purple);
+    transform: translateY(-2px);
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: var(--color-cyan);
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: var(--transition-smooth);
+}
+
+.btn-link:hover {
+    color: var(--text-primary);
+    text-shadow: var(--glow-cyan);
+}
+
+/* --- 1. Hero Section --- */
+#hero {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 25vh;
+}
+
+.hero-content {
+    max-width: 800px;
+    pointer-events: auto;
+}
+
+.hero-tagline {
+    font-family: var(--font-mono);
+    color: var(--color-cyan);
+    font-size: 1rem;
+    letter-spacing: 3px;
+    margin-bottom: 1.5rem;
+    text-shadow: var(--glow-cyan);
+}
+
+.hero-name {
+    font-size: 5rem;
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 2rem;
+    background: linear-gradient(90deg, #fff, #9ca3af, var(--color-purple), var(--color-cyan));
+    background-size: 300% auto;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: shine 8s ease infinite;
+}
+
+.hero-bio {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin-bottom: 3rem;
+}
+
+.hero-buttons {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.scroll-indicator {
+    position: absolute;
+    bottom: 3rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0.7;
+    animation: bounce 2s infinite;
+}
+
+.mouse-icon {
+    width: 25px;
+    height: 40px;
+    border: 2px solid var(--text-secondary);
+    border-radius: 15px;
+    position: relative;
+}
+
+.mouse-icon .wheel {
+    width: 4px;
+    height: 8px;
+    background-color: var(--color-cyan);
+    border-radius: 2px;
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: scroll-wheel 1.5s infinite;
+}
+
+.scroll-text {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 2px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+/* --- 2. About Section --- */
+.about-text h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-cyan);
+}
+
+.about-text p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+.quick-facts {
+    margin-top: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.fact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.fact-item i {
+    color: var(--color-purple);
+    width: 20px;
+}
+
+.about-highlights {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.highlight-card {
+    display: flex;
+    gap: 1.5rem;
+    padding: 1.5rem;
+}
+
+.highlight-card .card-icon {
+    font-size: 2rem;
+    color: var(--color-cyan);
+    flex-shrink: 0;
+    text-shadow: var(--glow-cyan);
+}
+
+.highlight-card h4 {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+}
+
+.highlight-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* --- 3. Projects Section --- */
+.projects-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+    pointer-events: auto;
+}
+
+.project-card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 320px;
+}
+
+.project-overlay-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(189, 0, 255, 0.05) 0%, transparent 70%);
+    pointer-events: none;
+    transition: var(--transition-smooth);
+}
+
+.project-card:hover .project-overlay-glow {
+    background: radial-gradient(circle, rgba(0, 240, 255, 0.08) 0%, transparent 60%);
+}
+
+.project-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.project-number {
+    font-family: var(--font-mono);
+    color: rgba(255,255,255,0.1);
+    font-size: 1.8rem;
+    font-weight: 800;
+}
+
+.project-tag {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-cyan);
+    border: 1px solid rgba(0, 240, 255, 0.3);
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    background: rgba(0, 240, 255, 0.05);
+}
+
+.project-title {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    transition: var(--transition-smooth);
+}
+
+.project-card:hover .project-title {
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
+}
+
+.project-desc {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.project-tech {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.project-tech span {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    background: rgba(255, 255, 255, 0.03);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+}
+
+.project-links {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.project-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: var(--transition-smooth);
+}
+
+.project-link:hover {
+    color: var(--color-purple);
+    text-shadow: var(--glow-purple);
+}
+
+/* --- 4. Skills Section --- */
+.skills-categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.skill-category h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.text-cyan { color: var(--color-cyan); text-shadow: var(--glow-cyan); }
+.text-purple { color: var(--color-purple); text-shadow: var(--glow-purple); }
+.text-yellow { color: var(--color-yellow); text-shadow: var(--glow-yellow); }
+
+.skill-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.skill-tag-badge {
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    padding: 0.4rem 1rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-color);
+    border-radius: 20px;
+    transition: var(--transition-smooth);
+}
+
+.skill-tag-badge:hover {
+    background: rgba(255, 255, 255, 0.08);
+    color: var(--color-cyan);
+    border-color: var(--color-cyan);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.15);
+    transform: scale(1.05);
+}
+
+.skills-info h3 {
+    font-size: 1.4rem;
+    color: var(--color-cyan);
+    margin-bottom: 1rem;
+}
+
+.skills-info p {
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+}
+
+.soft-skills-container h4 {
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.soft-skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.soft-skill-item {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.soft-skill-item i {
+    color: var(--color-purple);
+    font-size: 0.85rem;
+}
+
+/* --- 5. Timeline / Journey --- */
+.timeline {
+    position: relative;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+
+/* Timeline Vertical Line */
+.timeline::before {
+    content: '';
+    position: absolute;
+    width: 2px;
+    background: linear-gradient(180deg, var(--color-cyan), var(--color-purple), transparent);
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.timeline-item {
+    margin-bottom: 4rem;
+    position: relative;
+    width: 100%;
+}
+
+.timeline-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--color-cyan);
+    box-shadow: var(--glow-cyan);
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    top: 30px;
+    z-index: 5;
+    border: 3px solid var(--bg-color);
+}
+
+.timeline-item:nth-child(even) .timeline-dot {
+    background: var(--color-purple);
+    box-shadow: var(--glow-purple);
+}
+
+.timeline-date {
+    position: absolute;
+    width: 45%;
+    text-align: right;
+    left: 0;
+    top: 25px;
+    font-family: var(--font-mono);
+    font-size: 0.95rem;
+    color: var(--color-cyan);
+    font-weight: 600;
+}
+
+.timeline-item:nth-child(even) .timeline-date {
+    left: 55%;
+    text-align: left;
+    color: var(--color-purple);
+}
+
+.timeline-content {
+    width: 45%;
+    left: 55%;
+    position: relative;
+}
+
+.timeline-item:nth-child(odd) .timeline-content {
+    left: 0;
+}
+
+.timeline-content h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.2rem;
+}
+
+.company {
+    font-size: 0.95rem;
+    color: var(--color-cyan);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-family: var(--font-primary);
+}
+
+.location {
+    color: var(--text-muted);
+    font-weight: 400;
+    font-size: 0.85rem;
+}
+
+.timeline-desc {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1.2rem;
+}
+
+.timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.timeline-tags span {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-color);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* --- 6. Achievements --- */
+.achievement-card {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.achievement-icon {
+    font-size: 2.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.text-gold {
+    color: var(--color-yellow);
+    text-shadow: var(--glow-yellow);
+}
+
+.achievement-card h3 {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.achievement-event {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-cyan);
+    margin-bottom: 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.achievement-details {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+}
+
+/* --- 7. Contact --- */
+.contact-links {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.contact-item-row {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.contact-item-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    color: var(--color-cyan);
+    transition: var(--transition-smooth);
+}
+
+.contact-item-row:hover .contact-item-icon {
+    border-color: var(--color-cyan);
+    box-shadow: var(--glow-cyan);
+    transform: scale(1.05);
+}
+
+.contact-item-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.contact-item-content .label {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+    text-transform: uppercase;
+}
+
+.contact-item-content .value {
+    font-size: 1rem;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    transition: var(--transition-smooth);
+}
+
+.contact-item-content a.value:hover {
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
+}
+
+.contact-socials {
+    display: flex;
+    gap: 1rem;
+    margin-top: 3rem;
+}
+
+.social-circle {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: var(--transition-smooth);
+}
+
+.social-circle:hover {
+    color: var(--text-primary);
+    border-color: var(--color-purple);
+    box-shadow: var(--glow-purple);
+    transform: translateY(-3px);
+}
+
+/* Form Styles */
+.contact-form-container h3 {
+    margin-bottom: 2rem;
+}
+
+#contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.form-group {
+    position: relative;
+    width: 100%;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: var(--font-primary);
+    font-size: 1rem;
+    transition: var(--transition-smooth);
+    outline: none;
+}
+
+.form-group textarea {
+    resize: none;
+}
+
+.form-group label {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1rem;
+    pointer-events: none;
+    transition: var(--transition-smooth);
+}
+
+.form-group textarea ~ label {
+    top: 1.5rem;
+    transform: none;
+}
+
+/* Floating Label Logic */
+.form-group input:focus,
+.form-group textarea:focus {
+    border-color: var(--color-cyan);
+    background: rgba(255,255,255,0.04);
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.05);
+}
+
+.form-group input:focus ~ label,
+.form-group input:not(:placeholder-shown) ~ label,
+.form-group textarea:focus ~ label,
+.form-group textarea:not(:placeholder-shown) ~ label {
+    top: -10px;
+    left: 0.8rem;
+    transform: scale(0.8);
+    background: #060714;
+    padding: 0 0.5rem;
+    color: var(--color-cyan);
+    font-family: var(--font-mono);
+}
+
+/* --- Footer --- */
+footer {
+    border-top: 1px solid var(--border-color);
+    padding: 3rem 0;
+    margin-top: 4rem;
+    background: rgba(3, 3, 12, 0.6);
+}
+
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: var(--text-muted);
+    font-size: 0.9rem;
+    pointer-events: auto;
+}
+
+.footer-note {
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    color: var(--color-purple);
+}
+
+/* --- Project Modals --- */
+.project-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(3, 3, 12, 0.8);
+    backdrop-filter: blur(8px);
+    z-index: 2000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.project-modal-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.project-modal {
+    width: 90%;
+    max-width: 700px;
+    max-height: 85vh;
+    overflow-y: auto;
+    position: relative;
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.project-modal-overlay.active .project-modal {
+    transform: scale(1);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1.5rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    transition: var(--transition-smooth);
+}
+
+.modal-close:hover {
+    color: var(--color-magenta);
+}
+
+.modal-body {
+    padding-top: 1rem;
+}
+
+.modal-title {
+    font-size: 2rem;
+    color: var(--color-cyan);
+    margin-bottom: 0.5rem;
+}
+
+.modal-subtitle {
+    font-family: var(--font-mono);
+    font-size: 0.9rem;
+    color: var(--color-purple);
+    margin-bottom: 2rem;
+}
+
+.modal-section-title {
+    font-size: 1.15rem;
+    margin-top: 2rem;
+    margin-bottom: 0.8rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.3rem;
+}
+
+.modal-tech-stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.5rem;
+}
+
+.modal-tech-badge {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border-color);
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+}
+
+.modal-desc {
+    color: var(--text-secondary);
+    font-size: 1rem;
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.modal-bullet-list {
+    margin-left: 1.5rem;
+    margin-bottom: 2rem;
+    color: var(--text-secondary);
+}
+
+.modal-bullet-list li {
+    margin-bottom: 0.5rem;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 1.5rem;
+}
+
+/* --- Mobile Nav Drawer --- */
+.mobile-nav-toggle {
+    display: none;
+    background: none;
+    border: none;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 1002;
+}
+
+.mobile-nav-toggle .bar {
+    width: 25px;
+    height: 2px;
+    background-color: var(--text-primary);
+    transition: var(--transition-smooth);
+}
+
+.mobile-nav-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(3, 3, 12, 0.95);
+    backdrop-filter: blur(20px);
+    z-index: 999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.mobile-nav-overlay.active {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.mobile-nav ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2rem;
+    list-style: none;
+    margin-bottom: 3rem;
+}
+
+.mobile-nav-link {
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-size: 1.8rem;
+    font-weight: 700;
+    transition: var(--transition-smooth);
+}
+
+.mobile-nav-link span {
+    font-family: var(--font-mono);
+    color: var(--color-cyan);
+    font-size: 1.2rem;
+    margin-right: 0.5rem;
+}
+
+.mobile-nav-link:hover {
+    color: var(--text-primary);
+    text-shadow: var(--glow-cyan);
+}
+
+.mobile-socials {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.mobile-socials a {
+    color: var(--text-secondary);
+    font-size: 1.8rem;
+    transition: var(--transition-smooth);
+}
+
+.mobile-socials a:hover {
+    color: var(--color-cyan);
+}
+
+/* Mobile Toggle Animation States */
+.mobile-nav-toggle.active .bar:nth-child(1) {
+    transform: rotate(45deg) translate(5px, 6px);
+}
+.mobile-nav-toggle.active .bar:nth-child(2) {
+    opacity: 0;
+}
+.mobile-nav-toggle.active .bar:nth-child(3) {
+    transform: rotate(-45deg) translate(6px, -7px);
+}
+
+/* --- CSS Animations --- */
+@keyframes shine {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% { transform: translate(-50%, 0); }
+    40% { transform: translate(-50%, -10px); }
+    60% { transform: translate(-50%, -5px); }
+}
+
+@keyframes scroll-wheel {
+    0% { opacity: 1; transform: translate(-50%, 0); }
+    100% { opacity: 0; transform: translate(-50%, 15px); }
+}
+
+/* --- Media Queries (Responsiveness) --- */
+@media (max-width: 1024px) {
+    header {
+        padding: 1.5rem 5%;
+    }
+    nav {
+        display: none;
+    }
+    .header-socials {
+        display: none;
+    }
+    .mobile-nav-toggle {
+        display: flex;
+    }
+    
+    .grid-2, .grid-3 {
+        grid-template-columns: 1fr;
+    }
+    
+    .timeline::before {
+        left: 30px;
+    }
+    .timeline-dot {
+        left: 30px;
+    }
+    .timeline-date {
+        position: relative;
+        width: 100%;
+        text-align: left !important;
+        left: 60px !important;
+        top: 25px;
+        margin-bottom: 1.5rem;
+    }
+    .timeline-content {
+        width: calc(100% - 60px) !important;
+        left: 60px !important;
+    }
+    .timeline-item {
+        margin-bottom: 2rem;
+    }
+    .timeline-item:nth-child(even) .timeline-date {
+        left: 60px !important;
+    }
+    
+    .hero-name {
+        font-size: 3.5rem;
+    }
+    
+    section {
+        padding: 6rem 5% 3rem 5%;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-name {
+        font-size: 2.8rem;
+    }
+    .hero-tagline {
+        font-size: 0.85rem;
+    }
+    .hero-buttons {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    .btn {
+        width: 100%;
+        justify-content: center;
+    }
+    .projects-grid {
+        grid-template-columns: 1fr;
+    }
+    .soft-skills-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* --- Tech Train / Marquee Ticker --- */
+.hero-marquee-container {
+    margin-top: 3.5rem;
+    width: 100%;
+    max-width: 650px;
+    pointer-events: auto;
+}
+
+.hero-marquee-title {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: var(--color-cyan);
+    text-shadow: var(--glow-cyan);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 0.8rem;
+}
+
+.hero-marquee {
+    width: 100%;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+    /* Fading side masks */
+    mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, white 15%, white 85%, transparent);
+}
+
+.hero-marquee-inner {
+    display: flex;
+    width: max-content;
+    gap: 1.5rem;
+    padding: 0.5rem 0;
+    animation: marquee-train 22s linear infinite;
+}
+
+.hero-marquee:hover .hero-marquee-inner {
+    animation-play-state: paused;
+}
+
+.marquee-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    padding: 0.45rem 1.2rem;
+    border-radius: 20px;
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    transition: var(--transition-smooth);
+}
+
+.marquee-item:hover {
+    color: var(--text-primary);
+    border-color: var(--color-cyan);
+    box-shadow: 0 0 15px rgba(0, 240, 255, 0.25);
+    transform: scale(1.05);
+}
+
+.marquee-item i {
+    font-size: 1rem;
+}
+
+.text-green {
+    color: #00ff66;
+    text-shadow: 0 0 10px rgba(0, 255, 102, 0.3);
+}
+
+.text-magenta {
+    color: #ff00ea;
+    text-shadow: 0 0 10px rgba(255, 0, 234, 0.3);
+}
+
+@keyframes marquee-train {
+    0% {
+        transform: translate3d(0, 0, 0);
+    }
+    100% {
+        transform: translate3d(-50%, 0, 0);
+    }
+}
+
+/* =========================
+   MOBILE RESPONSIVE FIX
+   ========================= */
+
+@media (max-width: 1024px){
+
+    .grid-2{
+        grid-template-columns: 1fr;
+    }
+
+    .projects-grid{
+        grid-template-columns: 1fr;
+    }
+
+    .hero-name{
+        font-size: 4rem;
+    }
+
+    section{
+        padding: 7rem 6% 4rem;
+    }
+}
+
+@media (max-width: 768px){
+
+    body{
+        cursor:auto;
+    }
+
+    .custom-cursor,
+    .custom-cursor-glow{
+        display:none;
+    }
+
+    nav,
+    .header-socials{
+        display:none;
+    }
+
+    .mobile-nav-toggle{
+        display:flex;
+        flex-direction:column;
+        gap:5px;
+        background:none;
+        border:none;
+        z-index:1002;
+    }
+
+    .mobile-nav-toggle .bar{
+        width:25px;
+        height:3px;
+        background:#fff;
+    }
+
+    header{
+        padding:1rem 5%;
+    }
+
+    section{
+        padding:6rem 5% 3rem;
+        min-height:auto;
+    }
+
+    .hero-content{
+        width:100%;
+    }
+
+    .hero-name{
+        font-size:2.8rem;
+        line-height:1.1;
+    }
+
+    .hero-tagline{
+        font-size:.8rem;
+        letter-spacing:2px;
+    }
+
+    .hero-description{
+        font-size:1rem;
+        margin-bottom:30px;
+    }
+
+    .hero-buttons{
+        flex-direction:column;
+        width:100%;
+    }
+
+    .hero-buttons .btn{
+        width:100%;
+        justify-content:center;
+    }
+
+    .section-title h2{
+        font-size:1.8rem;
+    }
+
+    .glass-card{
+        padding:1.4rem;
+    }
+
+    .timeline::before{
+        left:20px;
+    }
+
+    .timeline-dot{
+        left:20px;
+    }
+
+    .timeline-date,
+    .timeline-content,
+    .timeline-item:nth-child(even) .timeline-date,
+    .timeline-item:nth-child(odd) .timeline-content{
+        width:100%;
+        left:0;
+        text-align:left;
+        padding-left:55px;
+    }
+
+    .timeline-date{
+        position:relative;
+        top:0;
+        margin-bottom:10px;
+    }
+
+    .soft-skills-grid{
+        grid-template-columns:1fr;
+    }
+
+    .contact-links{
+        gap:20px;
+    }
+
+    .contact-item-row{
+        flex-direction:column;
+        text-align:center;
+    }
+
+    .hero-marquee-title{
+        text-align:center;
+    }
+}
+
+@media (max-width: 480px){
+
+    .hero-name{
+        font-size:2.2rem;
+    }
+
+    .section-title h2{
+        font-size:1.5rem;
+    }
+
+    .project-card{
+        min-height:auto;
+    }
+
+    .project-tech{
+        gap:6px;
+    }
+
+    .project-tech span{
+        font-size:.7rem;
+    }
+
+    .btn{
+        padding:.8rem 1rem;
+        font-size:.85rem;
+    }
+}
+.mobile-nav-overlay{
+    position: fixed;
+    inset: 0;
+    background: rgba(3,3,12,0.98);
+    z-index: 9999;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.mobile-nav{
+    width: 100%;
+}
+
+.mobile-nav ul{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 25px;
+    list-style: none;
+    padding: 0;
+}
+
+.mobile-nav ul li a{
+    color: #fff !important;
+    font-size: 1.4rem;
+    text-decoration: none;
+    font-weight: 600;
+    display: block;
+}
+
+.mobile-nav ul li a span{
+    color: #00f0ff;
+    margin-right: 8px;
+}
+/* MOBILE MENU FIX */
+
+.mobile-nav{
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.mobile-nav ul{
+    list-style:none;
+    padding:0;
+    margin:0;
+    width:100%;
+}
+
+.mobile-nav ul li{
+    text-align:center;
+    margin:20px 0;
+}
+
+.mobile-nav-link{
+    display:block !important;
+    color:white !important;
+    font-size:1.5rem !important;
+    font-weight:700;
+    text-decoration:none;
+    opacity:1 !important;
+    visibility:visible !important;
+}
+
+.mobile-nav-link span{
+    color:#00f0ff;
+    margin-right:10px;
+}
+
+.mobile-socials{
+    margin-top:40px;
+    display:flex;
+    gap:25px;
+}
+
+.mobile-socials a{
+    color:white;
+    font-size:1.5rem;
+}
+</style>
+
+<style>
+.fa-phone,.fa-phone-alt,.fa-phone-volume{transform:scaleX(-1);}
+</style>
+
+</head>
+
+<body>
+    <!-- Background 3D Canvas -->
+    <canvas id="webgl-canvas"></canvas>
+
+    <!-- Custom Cursor -->
+    <div class="custom-cursor"></div>
+    <div class="custom-cursor-glow"></div>
+
+    <!-- Scroll Progress -->
+    <div id="scroll-progress-container">
+        <div id="scroll-progress"></div>
+    </div>
+
+    <!-- Navigation Header -->
+    <header>
+        <div class="logo">
+            <a href="#hero">
+                <span class="logo-glow">&lt;</span>TAKSH<span class="logo-glow">/&gt;</span>
+            </a>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="#about" class="nav-link"><span class="nav-num">01.</span> Profile</a></li>
+                <li><a href="#projects" class="nav-link"><span class="nav-num">02.</span> Projects</a></li>
+                <li><a href="#skills" class="nav-link"><span class="nav-num">03.</span> Skills</a></li>
+                <li><a href="#experience" class="nav-link"><span class="nav-num">04.</span> Journey</a></li>
+                <li><a href="#achievements" class="nav-link"><span class="nav-num">05.</span> Milestones</a></li>
+                <li><a href="#contact" class="nav-link"><span class="nav-num">06.</span> Connect</a></li>
+            </ul>
+        </nav>
+        <div class="header-socials">
+            <a href="https://github.com/taksh05" target="_blank" aria-label="GitHub"><i class="fab fa-github"></i></a>
+            <a href="https://www.linkedin.com/in/taksh-paneri-37026229b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank" aria-label="LinkedIn"><i
+                    class="fab fa-linkedin-in"></i></a>
+        </div>
+        <button class="mobile-nav-toggle" aria-label="Toggle navigation">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+    </header>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="mobile-nav-overlay">
+        <nav class="mobile-nav">
+            <ul>
+                <li><a href="#about" class="mobile-nav-link"><span>01.</span> Profile</a></li>
+                <li><a href="#projects" class="mobile-nav-link"><span>02.</span> Projects</a></li>
+                <li><a href="#skills" class="mobile-nav-link"><span>03.</span> Skills</a></li>
+                <li><a href="#experience" class="mobile-nav-link"><span>04.</span> Journey</a></li>
+                <li><a href="#achievements" class="mobile-nav-link"><span>05.</span> Milestones</a></li>
+                <li><a href="#contact" class="mobile-nav-link"><span>06.</span> Connect</a></li>
+            </ul>
+            <div class="mobile-socials">
+                <a href="https://github.com/taksh05" target="_blank"><i class="fab fa-github"></i></a>
+                <a href="https://linkedin.com/in/takshpaneri-37028329b" target="_blank"><i
+                        class="fab fa-linkedin-in"></i></a>
+                <a href="https://mail.google.com/mail/?view=cm&fs=1&to=<a class="value" target="_blank" href="https://mail.google.com/mail/?view=cm&fs=1&to=takshpaneri05@gmail.com&su=Portfolio%20Inquiry">takshpaneri05@gmail.com</a>&su=Portfolio%20Inquiry" target="_blank"><i class="fas fa-envelope"></i></a>
+            </div>
+        </nav>
+    </div>
+
+    <!-- Main Content Container -->
+    <main id="content-container">
+
+        <!-- 1. Hero Section -->
+        <section id="hero" class="active-section">
+            <div class="hero-content">
+                <h2 class="hero-tagline">BRIDGING CODE & IMMERSIVE REALITIES</h2>
+                <h1 class="hero-name">TAKSH PANERI</h1>
+               <p class="hero-description">
+    <span id="typed-text"></span>
+    <span class="typed-cursor">|</span>
+</p>
+                <div class="hero-buttons">
+                    <a href="#projects" class="btn btn-primary btn-glow">View Projects <i
+                            class="fas fa-arrow-right"></i></a>
+                    <a href="#contact" class="btn btn-secondary">Get in Touch</a>
+                </div>
+
+                <!-- Infinite Tech Train / Marquee Ticker -->
+                <div class="hero-marquee-container">
+                    <div class="hero-marquee-title">Core Tech Stack & Engines</div>
+                    <div class="hero-marquee">
+                        <div class="hero-marquee-inner">
+                            <div class="marquee-item"><i class="fab fa-react text-cyan"></i> React</div>
+                            <div class="marquee-item"><i class="fab fa-unity text-purple"></i> Unity</div>
+                            <div class="marquee-item"><i class="fas fa-cube text-cyan"></i> Three.js</div>
+                            <div class="marquee-item"><i class="fab fa-node-js text-green"></i> Node.js</div>
+                            <div class="marquee-item"><i class="fas fa-database text-yellow"></i> MongoDB</div>
+                            <div class="marquee-item"><i class="fas fa-infinity text-magenta"></i> A-Frame</div>
+                            <div class="marquee-item"><i class="fas fa-shapes text-purple"></i> Blender</div>
+                            <div class="marquee-item"><i class="fas fa-code text-cyan"></i> C++</div>
+                            <div class="marquee-item"><i class="fas fa-terminal text-yellow"></i> JS (ES6+)</div>
+                            <div class="marquee-item"><i class="fab fa-git-alt text-magenta"></i> Git</div>
+
+                            <!-- Duplicate items for seamless continuous looping -->
+                            <div class="marquee-item"><i class="fab fa-react text-cyan"></i> React</div>
+                            <div class="marquee-item"><i class="fab fa-unity text-purple"></i> Unity</div>
+                            <div class="marquee-item"><i class="fas fa-cube text-cyan"></i> Three.js</div>
+                            <div class="marquee-item"><i class="fab fa-node-js text-green"></i> Node.js</div>
+                            <div class="marquee-item"><i class="fas fa-database text-yellow"></i> MongoDB</div>
+                            <div class="marquee-item"><i class="fas fa-infinity text-magenta"></i> A-Frame</div>
+                            <div class="marquee-item"><i class="fas fa-shapes text-purple"></i> Blender</div>
+                            <div class="marquee-item"><i class="fas fa-code text-cyan"></i> C++</div>
+                            <div class="marquee-item"><i class="fas fa-terminal text-yellow"></i> JS (ES6+)</div>
+                            <div class="marquee-item"><i class="fab fa-git-alt text-magenta"></i> Git</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-indicator">
+                <span class="mouse-icon">
+                    <span class="wheel"></span>
+                </span>
+                <span class="scroll-text">Scroll to Explore</span>
+            </div>
+        </section>
+
+        <!-- 2. About Section -->
+        <section id="about">
+            <div class="container">
+                <div class="section-title">
+                    <h2><span class="title-num">01.</span> Profile Overview</h2>
+                    <div class="title-line"></div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="about-text glass-card">
+                        <h3>Who I Am</h3>
+                        <p>I am a results-driven Software Engineer with extensive experience bridging full-stack web
+                            applications (MERN) and next-generation immersive realities (XR/3D).</p>
+                        <p>Adept at pioneering AI-assisted engineering methodologies to accelerate delivery cycles while
+                            maintaining rigorous code quality. I have a proven track record as a communicator and team
+                            leader, recognized at national-level tech bootcamps for product pitching and execution, with
+                            demonstrated capability in organizing pan-India hackathons and aligning stakeholders.</p>
+                        <div class="quick-facts">
+                            <div class="fact-item"><i class="fas fa-map-marker-alt"></i> Udaipur, Rajasthan</div>
+                            <div class="fact-item"><i class="fas fa-graduation-cap"></i> B.Tech CSE (Techno India NJR)
+                            </div>
+                            <div class="fact-item"><i class="fas fa-envelope"></i> takshpaneri05@gmail.com</div>
+                        </div>
+                    </div>
+                    <div class="about-highlights">
+                        <div class="highlight-card glass-card hover-glow">
+                            <div class="card-icon"><i class="fab fa-unity"></i></div>
+                            <h4>XR & 3D Engineering</h4>
+                            <p>Optimizing and integrating 3D assets using Unity, Blender, and Three.js to construct
+                                immersive experiences running natively in the browser or head-mounted displays.</p>
+                        </div>
+                        <div class="highlight-card glass-card hover-glow">
+                            <div class="fas fa-brain card-icon"></div>
+                            <h4>AI & Emerging Tech</h4>
+                            <p>Leading campus-wide initiatives as a Google Student Ambassador to drive adoption of
+                                Gemini AI, organizing technical workshops, and building agentic systems.</p>
+                        </div>
+                        <div class="highlight-card glass-card hover-glow">
+                            <div class="fas fa-laptop-code card-icon"></div>
+                            <h4>Full-Stack Mastery</h4>
+                            <p>Architecting secure, performant MERN stack applications, robust database schemas in
+                                SQL/NoSQL, and creating slick interactive frontend visuals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Projects Section -->
+        <section id="projects">
+            <div class="container">
+                <div class="section-title">
+                    <h2><span class="title-num">02.</span> Featured Work</h2>
+                    <div class="title-line"></div>
+                </div>
+                <div class="projects-grid">
+                    <!-- Project 1 -->
+                    <div class="project-card glass-card hover-glow" data-project="3d-model-display">
+                        <div class="project-overlay-glow"></div>
+                        <div class="project-header">
+                            <span class="project-number">01</span>
+                            <span class="project-tag">XR / Three.js</span>
+                        </div>
+                        <h3 class="project-title">3D-Model-Display</h3>
+                        <p class="project-desc">A highly interactive 3D WebGL model viewer utilizing React, Three.js,
+                            Model-Viewer, and Sketchfab integration for streaming high-fidelity assets directly to
+                            browsers.</p>
+                        <div class="project-tech">
+                            <span>React</span>
+                            <span>Three.js</span>
+                            <span>Model Viewer</span>
+                            <span>WebGL</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/taksh05/xr.git" target="_blank" class="project-link"
+                                aria-label="GitHub Repository"><i class="fab fa-github"></i> Source</a>
+                            <button class="project-btn btn-link modal-trigger" data-modal="3d-model-display">Details <i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Project 2 -->
+                    <div class="project-card glass-card hover-glow" data-project="student-assignment">
+                        <div class="project-overlay-glow"></div>
+                        <div class="project-header">
+                            <span class="project-number">02</span>
+                            <span class="project-tag">Full-Stack</span>
+                        </div>
+                        <h3 class="project-title">Student Assignment Portal</h3>
+                        <p class="project-desc">A full-stack student-assignment workflow portal featuring automated file
+                            submissions, grading dashboards, real-time notifications, and security protocols.</p>
+                        <div class="project-tech">
+                            <span>MongoDB</span>
+                            <span>Express</span>
+                            <span>React</span>
+                            <span>Node.js</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/taksh05/Assignment-Portal.git" target="_blank"
+                                class="project-link" aria-label="GitHub Repository"><i class="fab fa-github"></i>
+                                Source</a>
+                            <button class="project-btn btn-link modal-trigger" data-modal="student-assignment">Details
+                                <i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Project 3 -->
+                    <div class="project-card glass-card hover-glow" data-project="gesture-recogniser">
+                        <div class="project-overlay-glow"></div>
+                        <div class="project-header">
+                            <span class="project-number">03</span>
+                            <span class="project-tag">Computer Vision</span>
+                        </div>
+                        <h3 class="project-title">Smart Hand Gesture Recogniser</h3>
+                        <p class="project-desc">A real-time hand gesture recognition system operating entirely
+                            client-side, translating gestures into interactive system and web commands.</p>
+                        <div class="project-tech">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                            <span>TensorFlow.js</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/taksh05/HAND-GESTURE" target="_blank" class="project-link"
+                                aria-label="GitHub Repository"><i class="fab fa-github"></i> Source</a>
+                            <button class="project-btn btn-link modal-trigger" data-modal="gesture-recogniser">Details
+                                <i class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Project 4 -->
+                    <div class="project-card glass-card hover-glow" data-project="student-hub">
+                        <div class="project-overlay-glow"></div>
+                        <div class="project-header">
+                            <span class="project-number">04</span>
+                            <span class="project-tag">Web App</span>
+                        </div>
+                        <h3 class="project-title">Smart Student Hub</h3>
+                        <p class="project-desc">A unified digital space helping students manage coursework,
+                            collaborative schedules, shared resources, and academic milestone trackers.</p>
+                        <div class="project-tech">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                            <span>Local Database</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/taksh05/Smart-Student-Hub" target="_blank" class="project-link"
+                                aria-label="GitHub Repository"><i class="fab fa-github"></i> Source</a>
+                            <button class="project-btn btn-link modal-trigger" data-modal="student-hub">Details <i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Project 5 -->
+                    <div class="project-card glass-card hover-glow" data-project="art-craft">
+                        <div class="project-overlay-glow"></div>
+                        <div class="project-header">
+                            <span class="project-number">05</span>
+                            <span class="project-tag">A-Frame / VR</span>
+                        </div>
+                        <h3 class="project-title">Kala Connect (Art & Craft)</h3>
+                        <p class="project-desc">An immersive virtual VR art gallery developed using A-Frame, allowing
+                            artists to showcase physical craft in responsive 3D environments.</p>
+                        <div class="project-tech">
+                            <span>A-Frame</span>
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>3D Assets</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://github.com/Kavirajsinghv21/Kala_Connect/invitations" target="_blank"
+                                class="project-link" aria-label="GitHub Repository"><i class="fab fa-github"></i>
+                                Source</a>
+                            <button class="project-btn btn-link modal-trigger" data-modal="art-craft">Details <i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!-- Project 6 -->
+                    <div class="project-card glass-card hover-glow" data-project="exafix">
+                        <div class="project-overlay-glow"></div>
+                        <div class="project-header">
+                            <span class="project-number">06</span>
+                            <span class="project-tag">Frontend</span>
+                        </div>
+                        <h3 class="project-title">ExaFIX</h3>
+                        <p class="project-desc">A highly scalable web portal delivering diagnostic repair guidelines and
+                            automated systems status monitoring dashboards.</p>
+                        <div class="project-tech">
+                            <span>HTML5</span>
+                            <span>CSS3</span>
+                            <span>JavaScript</span>
+                            <span>REST APIs</span>
+                        </div>
+                        <div class="project-links">
+                            <a href="https://34.28.117.27/" target="_blank" class="project-link"
+                                aria-label="Live Demo"><i class="fas fa-external-link-alt"></i> Live</a>
+                            <button class="project-btn btn-link modal-trigger" data-modal="exafix">Details <i
+                                    class="fas fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Skills Section -->
+        <section id="skills">
+            <div class="container">
+                <div class="section-title">
+                    <h2><span class="title-num">03.</span> Technical Arsenal</h2>
+                    <div class="title-line"></div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="skills-categories">
+                        <!-- Category 1 -->
+                        <div class="skill-category glass-card">
+                            <h3><i class="fas fa-code text-cyan"></i> Programming Languages</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag-badge" data-skill-weight="90">JavaScript (ES6+)</span>
+                                <span class="skill-tag-badge" data-skill-weight="85">C++</span>
+                                <span class="skill-tag-badge" data-skill-weight="80">C</span>
+                                <span class="skill-tag-badge" data-skill-weight="90">HTML5 / CSS3</span>
+                                <span class="skill-tag-badge" data-skill-weight="85">SQL</span>
+                            </div>
+                        </div>
+
+                        <!-- Category 2 -->
+                        <div class="skill-category glass-card">
+                            <h3><i class="fas fa-cubes text-purple"></i> Frameworks & Engines</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag-badge" data-skill-weight="95">React</span>
+                                <span class="skill-tag-badge" data-skill-weight="85">Node.js</span>
+                                <span class="skill-tag-badge" data-skill-weight="85">Express.js</span>
+                                <span class="skill-tag-badge" data-skill-weight="90">Three.js</span>
+                                <span class="skill-tag-badge" data-skill-weight="80">A-Frame</span>
+                                <span class="skill-tag-badge" data-skill-weight="85">Unity 3D</span>
+                                <span class="skill-tag-badge" data-skill-weight="80">MongoDB</span>
+                            </div>
+                        </div>
+
+                        <!-- Category 3 -->
+                        <div class="skill-category glass-card">
+                            <h3><i class="fas fa-tools text-yellow"></i> Tools & Workflows</h3>
+                            <div class="skill-tags">
+                                <span class="skill-tag-badge" data-skill-weight="90">Git & GitHub</span>
+                                <span class="skill-tag-badge" data-skill-weight="85">Blender</span>
+                                <span class="skill-tag-badge" data-skill-weight="85">Postman</span>
+                                <span class="skill-tag-badge" data-skill-weight="80">Google Cloud Console</span>
+                                <span class="skill-tag-badge" data-skill-weight="80">Atlas</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Skills 3D interactive helper panel -->
+                    <div class="skills-info glass-card">
+                        <h3>3D Skill Tag Cloud</h3>
+                        <p>The rotating energy core in the background represents my tech stack. Hover over the particle
+                            vortex, or move your mouse around to bend and warp the network structure.</p>
+                        <div class="soft-skills-container">
+                            <h4>Leadership & Methodology</h4>
+                            <div class="soft-skills-grid">
+                                <div class="soft-skill-item"><i class="fas fa-check-circle"></i> Project Management
+                                </div>
+                                <div class="soft-skill-item"><i class="fas fa-check-circle"></i> Team Leadership</div>
+                                <div class="soft-skill-item"><i class="fas fa-check-circle"></i> Problem Solving</div>
+                                <div class="soft-skill-item"><i class="fas fa-check-circle"></i> Public Speaking</div>
+                                <div class="soft-skill-item"><i class="fas fa-check-circle"></i> Critical Thinking</div>
+                                <div class="soft-skill-item"><i class="fas fa-check-circle"></i> Collaborative Planning
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Journey / Experience Section -->
+        <section id="experience">
+            <div class="container">
+                <div class="section-title">
+                    <h2><span class="title-num">04.</span> Professional Journey</h2>
+                    <div class="title-line"></div>
+                </div>
+
+                <div class="timeline">
+                    <!-- Timeline Node 1 -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">Nov 2025 – Jan 2026</div>
+                        <div class="timeline-content glass-card hover-glow">
+                            <h3>AR-VR Developer Intern</h3>
+                            <h4 class="company">i3 Lab Pvt. Ltd. <span class="location">| Udaipur, Rajasthan</span></h4>
+                            <p class="timeline-desc">Optimized high-poly 3D assets and integrated detailed AR/VR models
+                                using Unity and Blender. Worked closely under senior mentorship to streamline asset
+                                pipelines and improve browser rendering performance for immersive application modules.
+                            </p>
+                            <div class="timeline-tags">
+                                <span>Unity 3D</span>
+                                <span>Blender</span>
+                                <span>Asset Optimization</span>
+                                <span>AR/VR</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Node 2 -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">Sep 2025 – Dec 2025</div>
+                        <div class="timeline-content glass-card hover-glow">
+                            <h3>Google Student Ambassador</h3>
+                            <h4 class="company">Google AI Ecosystem <span class="location">| Techno India NJR </span>
+                            </h4>
+                            <p class="timeline-desc">Led wide-scale student initiatives to drive adoption of Gemini AI
+                                models. Spearheaded multi-session technical bootcamps, organized AI hackathons, and
+                                served as a direct point of contact representing Google's developer technologies to a
+                                community of hundreds of active students.</p>
+                            <div class="timeline-tags">
+                                <span>Gemini AI</span>
+                                <span>Developer Relations</span>
+                                <span>Event Leadership</span>
+                                <span>Public Speaking</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Node 3 -->
+                    <div class="timeline-item">
+                        <div class="timeline-dot"></div>
+                        <div class="timeline-date">2022 - Present</div>
+                        <div class="timeline-content glass-card hover-glow">
+                            <h3>B.Tech in Computer Science & Engineering</h3>
+                            <h4 class="company">Techno India NJR Institute of Technology <span class="location">|
+                                    Udaipur</span></h4>
+                            <p class="timeline-desc">Acquiring solid foundational grounding in computer science
+                                principles, database design, software engineering methodologies, data structures, and
+                                advanced algorithms. Maintained active focus on WebGL and Extended Reality (XR)
+                                engineering frameworks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Achievements Section -->
+        <section id="achievements">
+            <div class="container">
+                <div class="section-title">
+                    <h2><span class="title-num">05.</span> Key Milestones</h2>
+                    <div class="title-line"></div>
+                </div>
+                <div class="grid grid-3">
+                    <div class="achievement-card glass-card hover-glow">
+                        <div class="achievement-icon"><i class="fas fa-trophy text-gold"></i></div>
+                        <h3>Vibe-Coding Winner</h3>
+                        <p class="achievement-event">TechManthan (National Level)</p>
+                        <p class="achievement-details">Awarded 1st place in the fast-paced competitive vibe-coding
+                            challenges, solving algorithmic design problems under strict constraints.</p>
+                    </div>
+
+                    <div class="achievement-card glass-card hover-glow">
+                        <div class="achievement-icon"><i class="fas fa-lightbulb text-cyan"></i></div>
+                        <h3>Smart India Hackathon Winner</h3>
+                        <p class="achievement-event">Internal SIH</p>
+                        <p class="achievement-details">Won the internal selection round for the prestigious national
+                            hackathon, designing a full-stack solution to resolve complex institutional administration
+                            challenges.</p>
+                    </div>
+
+                    <div class="achievement-card glass-card hover-glow">
+                        <div class="achievement-icon"><i class="fas fa-shield-alt text-purple"></i></div>
+                        <h3>Google Latesity Hackathon</h3>
+                        <p class="achievement-event">Finalist (All India Level)</p>
+                        <p class="achievement-details">Recognized as a national finalist for proposing and executing a
+                            high-impact AI/ML prototype using Google Cloud Developer resources.</p>
+                    </div>
+
+                    <div class="achievement-card glass-card hover-glow">
+                        <div class="achievement-icon"><i class="fas fa-rocket text-yellow"></i></div>
+                        <h3>Agentic AI Premiere League</h3>
+                        <p class="achievement-event">Chief Organizer (All India)</p>
+                        <p class="achievement-details">Pioneered and managed an extensive national AI league, setting up
+                            challenge rubrics, guiding hacker teams, and managing cross-functional operations.</p>
+                    </div>
+
+                    <div class="achievement-card glass-card hover-glow">
+                        <div class="achievement-icon"><i class="fas fa-award text-purple"></i></div>
+                        <h3>TiE Udaipur</h3>
+                        <p class="achievement-event">Finalist Selection</p>
+                        <p class="achievement-details">Pitched start-up models and technical prototypes to regional
+                            entrepreneurs and angel investors, securing finalist placement.</p>
+                    </div>
+
+                    <div class="achievement-card glass-card hover-glow">
+                        <div class="achievement-icon"><i class="fas fa-graduation-cap text-cyan"></i></div>
+                        <h3>AICTE Bootcamp</h3>
+                        <p class="achievement-event">Entrepreneurship & Dev</p>
+                        <p class="achievement-details">Selected for the intensive government-sponsored bootcamp focused
+                            on transforming technical designs into viable commercial products.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Contact Section -->
+        <section id="contact">
+            <div class="container">
+                <div class="section-title">
+                    <h2><span class="title-num">06.</span> Get In Touch</h2>
+                    <div class="title-line"></div>
+                </div>
+                <div class="grid grid-2">
+                    <div class="contact-info glass-card">
+                        <h3>Let's Create Something Immersive</h3>
+                        <p>I am actively open to discussing roles in full-stack engineering, AR/VR integration, and
+                            immersive WebGL interfaces. Whether you want to hire me, collaborate on a project, or just
+                            talk tech, feel free to drop a message!</p>
+
+                        <div class="contact-links">
+                            <div class="contact-item-row">
+                                <div class="contact-item-icon">
+                                     <a
+        href="https://mail.google.com/mail/?view=cm&fs=1&to=takshpaneri05@gmail.com&su=Portfolio%20Inquiry"
+        target="_blank"
+        class="contact-item-icon"
+        aria-label="Email Taksh">
+
+        <i class="fas fa-envelope"></i>
+
+    </a></div>
+                                <div class="contact-item-content">
+                                    <span class="label">Email</span>
+                                    <a href="https://mail.google.com/mail/?view=cm&fs=1&to=takshpaneri05@gmail.com&su=Portfolio%20Inquiry" target="_blank" class="value">takshpaneri05@gmail.com</a>
+                                </div>
+                            </div>
+                            <div class="contact-item-row">
+                                <div class="contact-item-icon"><i class="fas fa-phone-alt"></i></div>
+                                <div class="contact-item-content">
+                                    <span class="label">Phone</span>
+                                    <a href="tel:+916378333448" class="value">+91 6378333448</a>
+                                </div>
+                            </div>
+                            <div class="contact-item-row">
+                                <div class="contact-item-icon"><i class="fas fa-map-marker-alt"></i></div>
+                                <div class="contact-item-content">
+                                    <span class="label">Location</span>
+                                    <span class="value">Udaipur, Rajasthan, India</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="contact-socials">
+                            <a href="https://github.com/taksh05" target="_blank" class="social-circle"
+                                aria-label="GitHub"><i class="fab fa-github"></i></a>
+                            <a href="https://www.linkedin.com/in/taksh-paneri-37026229b?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app" target="_blank"
+                                class="social-circle" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                    </div>
+
+                    <div class="contact-form-container glass-card">
+    
+    <h3>Currently Building 🚀</h3>
+
+    <div class="info-card">
+        <div class="info-item">
+            <span>💻</span>
+            <p>MERN Stack Applications</p>
+        </div>
+
+        <div class="info-item">
+            <span>🤖</span>
+            <p>AI Powered Solutions</p>
+        </div>
+
+        <div class="info-item">
+            <span>🥽</span>
+            <p>AR / VR Experiences</p>
+        </div>
+
+        <div class="info-item">
+            <span>☁️</span>
+            <p>Google Cloud Projects</p>
+        </div>
+
+        <div class="info-item">
+            <span>🏆</span>
+            <p>Hackathon Ready Products</p>
+        </div>
+    </div>
+
+</div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            <div class="container footer-content">
+                <p>&copy; 2026 Taksh Paneri. Designed with passion & code.</p>
+                <p class="footer-note">Powered by Three.js & GSAP</p>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Modal for Project Details -->
+    <div class="project-modal-overlay" id="project-modal">
+        <div class="project-modal glass-card">
+            <button class="modal-close" aria-label="Close modal"><i class="fas fa-times"></i></button>
+            <div class="modal-body">
+                <!-- Will be dynamically populated via JS -->
+            </div>
+        </div>
+    </div>
+    
+
+    <!-- Script imports -->
+    <!-- Loading CDN scripts first -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- GSAP for scroll tracking -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+
+    <!-- Main Portfolio JS logic -->
+    <script>
+/* ==========================================================================
+   Tactile & Visual Premium 3D Engine - Taksh Paneri Portfolio
+   ========================================================================== */
+
+// --- Project Data for Modals ---
+const projectData = {
+    "3d-model-display": {
+        title: "3D-Model-Display",
+        subtitle: "React, Three.js, Model-Viewer, Sketchfab",
+        desc: "A highly interactive 3D WebGL model viewer enabling browser-native rendering of heavy CAD models and optimized OBJ/FBX assets. Built to streamline 3D asset presentation with zero external plugins.",
+        bullets: [
+            "Optimized high-poly assets (reduced polygon counts by 65% in Blender, converted textures to KTX2/WebP).",
+            "Integrated Google Model-Viewer and Sketchfab API for quick-embed and customized frame controls.",
+            "Features fully customized orbital rotations, zoom limits, panning, studio-glowing lighting presets, and wireframe toggles."
+        ],
+        github: "https://github.com/taksh05/xr.git",
+        live: null
+    },
+    "student-assignment": {
+        title: "Student Assignment Portal",
+        subtitle: "MongoDB, Express.js, React, Node.js (MERN)",
+        desc: "A secure, scalable workspace managing student assignments, grading, submissions, and administrative communications. Features clean, isolated dashboard environments for students, teachers, and admins.",
+        bullets: [
+            "Built modular REST APIs utilizing Express.js and managed schemas in MongoDB Atlas.",
+            "Implemented secure JSON Web Token (JWT) authorization protocols alongside Bcrypt password hashing.",
+            "Created responsive grading interfaces featuring drag-and-drop file upload capabilities and real-time email triggers."
+        ],
+        github: "https://github.com/taksh05/Assignment-Portal.git",
+        live: null
+    },
+    "gesture-recogniser": {
+        title: "Smart Hand Gesture Recogniser",
+        subtitle: "TensorFlow.js, MediaPipe, HTML5, CSS3, JavaScript",
+        desc: "A computer vision model operating entirely client-side, interpreting video stream feeds into system and browser commands. Creates a hands-free navigation layer for users.",
+        bullets: [
+            "Integrated TensorFlow.js MediaPipe Hands model to map hand landmark coordinates in real-time.",
+            "Formulated custom mathematical algorithms analyzing distance and angles between finger coordinates to classify gestures.",
+            "Designed a highly efficient client-side structure running at 30+ FPS, ensuring absolute data privacy."
+        ],
+        github: "https://github.com/taksh05/HAND-GESTURE",
+        live: null
+    },
+    "student-hub": {
+        title: "Smart Student Hub",
+        subtitle: "HTML5, CSS3, JavaScript, LocalStorage",
+        desc: "A local dashboard utility helping students manage tasks, note archives, exams schedules, and class progress trackers.",
+        bullets: [
+            "Implemented Client-side LocalStorage to persist user schedules and notes with zero server overhead.",
+            "Designed an interactive calendar grid displaying upcoming deadlines.",
+            "Features modern UI themes with fully customizable glassmorphic colors."
+        ],
+        github: "https://github.com/taksh05/Smart-Student-Hub",
+        live: null
+    },
+    "art-craft": {
+        title: "Kala Connect (Art & Craft)",
+        subtitle: "A-Frame, HTML5, CSS3, WebVR",
+        desc: "An immersive WebVR virtual gallery that connects local traditional artisans with global buyers, showcasing high-fidelity 3D representations of physical crafts.",
+        bullets: [
+            "Constructed virtual exhibition rooms using A-Frame primitives and custom GLTF models.",
+            "Optimized texture resolutions and mesh geometries in Blender to allow smooth VR navigation on mobile headsets.",
+            "Engineered proximity-based audio and raycasted descriptions when looking at specific artwork nodes."
+        ],
+        github: "https://github.com/Kavirajsinghv21/Kala_Connect/invitations",
+        live: null
+    },
+    "exafix": {
+        title: "ExaFIX",
+        subtitle: "HTML5, CSS3, JavaScript, REST APIs",
+        desc: "A diagnostic repair guide portal presenting automated system status monitors and visual diagnostic checklists for systems administrators.",
+        bullets: [
+            "Constructed highly clean, responsive layout tables displaying server latency and package data in real-time.",
+            "Implemented custom CSS animations for neon status indicator alerts.",
+            "Optimized codebase to ensure load times under 300ms."
+        ],
+        github: null,
+        live: "https://34.28.117.27/"
+    }
+};
+
+// --- Initialization Variables ---
+let scene, camera, renderer, clock;
+let particles, particleGeometry;
+const particleCount = 4500;
+
+// State Machine for scrolling and morphing
+const scrollState = { progress: 0 };
+const particleStates = [];
+
+// Mouse tracking
+const mouse = { x: 0, y: 0, targetX: 0, targetY: 0 };
+
+// --- Custom Cursor Logic ---
+function initCursor() {
+    const cursor = document.querySelector('.custom-cursor');
+    const glow = document.querySelector('.custom-cursor-glow');
+
+    window.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+
+        // Add a slight lag to the outer glow for premium organic motion
+        gsap.to(glow, {
+            left: e.clientX,
+            top: e.clientY,
+            duration: 0.15,
+            ease: "power2.out"
+        });
+        
+        // Map mouse coords (-1 to 1) for Three.js camera parallax
+        mouse.targetX = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.targetY = -(e.clientY / window.innerHeight) * 2 + 1;
+    });
+
+    // Add Hover states to interactive elements
+    const hoverElements = document.querySelectorAll('a, button, .project-card, .skill-tag-badge, .timeline-content, .achievement-card, .form-group input, .form-group textarea');
+    hoverElements.forEach(elem => {
+        elem.addEventListener('mouseenter', () => {
+            document.body.classList.add('cursor-hover');
+        });
+        elem.addEventListener('mouseleave', () => {
+            document.body.classList.remove('cursor-hover');
+        });
+    });
+}
+
+// --- Mobile Nav Drawer ---
+function initMobileNav() {
+    const toggle = document.querySelector('.mobile-nav-toggle');
+    const overlay = document.querySelector('.mobile-nav-overlay');
+    const links = document.querySelectorAll('.mobile-nav-link');
+
+    function toggleMenu() {
+        toggle.classList.toggle('active');
+        overlay.classList.toggle('active');
+        document.body.style.overflow = overlay.classList.contains('active') ? 'hidden' : 'auto';
+    }
+
+    toggle.addEventListener('click', toggleMenu);
+    links.forEach(link => link.addEventListener('click', toggleMenu));
+}
+
+// --- Modal System ---
+function initModals() {
+    const modalOverlay = document.getElementById('project-modal');
+    const modalClose = modalOverlay.querySelector('.modal-close');
+    const modalBody = modalOverlay.querySelector('.modal-body');
+    const triggers = document.querySelectorAll('.modal-trigger');
+
+    triggers.forEach(trigger => {
+        trigger.addEventListener('click', () => {
+            const projectId = trigger.getAttribute('data-modal');
+            const data = projectData[projectId];
+            if (!data) return;
+
+            // Populate Modal
+            let bulletHTML = "";
+            if (data.bullets) {
+                bulletHTML = `<ul class="modal-bullet-list">` + 
+                    data.bullets.map(b => `<li>${b}</li>`).join('') + 
+                    `</ul>`;
+            }
+
+            let actionsHTML = "";
+            if (data.github) {
+                actionsHTML += `<a href="${data.github}" target="_blank" class="btn btn-primary btn-glow"><i class="fab fa-github"></i> View Repository</a>`;
+            }
+            if (data.live) {
+                actionsHTML += `<a href="${data.live}" target="_blank" class="btn btn-secondary"><i class="fas fa-external-link-alt"></i> Live Site</a>`;
+            }
+
+            modalBody.innerHTML = `
+                <h3 class="modal-title">${data.title}</h3>
+                <h4 class="modal-subtitle">${data.subtitle}</h4>
+                
+                <h4 class="modal-section-title">Overview</h4>
+                <p class="modal-desc">${data.desc}</p>
+                
+                <h4 class="modal-section-title">Key Contributions</h4>
+                ${bulletHTML}
+                
+                <div class="modal-actions">
+                    ${actionsHTML}
+                </div>
+            `;
+
+            modalOverlay.classList.add('active');
+        });
+    });
+
+    function closeModal() {
+        modalOverlay.classList.remove('active');
+    }
+
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => {
+        if (e.target === modalOverlay) closeModal();
+    });
+}
+
+// --- Three.js Programmatic Particle Glow Texture ---
+function createGlowTexture() {
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+
+    // Create radial gradient for a soft spherical neon glow
+    const grad = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 1)');
+    grad.addColorStop(0.15, 'rgba(0, 240, 255, 0.9)');
+    grad.addColorStop(0.4, 'rgba(189, 0, 255, 0.45)');
+    grad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, 64, 64);
+
+    return new THREE.CanvasTexture(canvas);
+}
+
+// --- Generate Particle States (Coordinate Math) ---
+function generateParticleStates() {
+    const states = {
+        hero: new Float32Array(particleCount * 3),
+        about: new Float32Array(particleCount * 3),
+        projects: new Float32Array(particleCount * 3),
+        skills: new Float32Array(particleCount * 3),
+        journey: new Float32Array(particleCount * 3),
+        contact: new Float32Array(particleCount * 3)
+    };
+
+    for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+
+        // 1. HERO STATE - 3D Digital Wave Plane Grid
+        const cols = 60;
+        const rows = 75;
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        
+        // Map grid coordinates to 3D space
+        const x = ((col / cols) - 0.5) * 16.0; // range: -8.0 to 8.0
+        const z = ((row / rows) - 0.5) * 16.0; // range: -8.0 to 8.0
+        const y = -1.2; // Base height floor
+        
+        states.hero[i3] = x;
+        states.hero[i3 + 1] = y;
+        states.hero[i3 + 2] = z;
+
+        // 2. ABOUT STATE - Double Helix
+        const strand = i % 2 === 0 ? 1 : -1;
+        const helixAngle = (i / particleCount) * Math.PI * 14; // 7 full loops
+        const helixRadius = 1.8;
+        states.about[i3] = helixRadius * Math.cos(helixAngle) * strand;
+        states.about[i3 + 1] = ((i / particleCount) - 0.5) * 8.5; // Vertical alignment
+        states.about[i3 + 2] = helixRadius * Math.sin(helixAngle) * strand;
+
+        // 3. PROJECTS STATE - Nested Flat Concentric Rings
+        const ring = i % 3;
+        const ringRadius = 1.5 + ring * 1.6;
+        const ringAngle = Math.random() * Math.PI * 2;
+        states.projects[i3] = ringRadius * Math.cos(ringAngle);
+        states.projects[i3 + 1] = (Math.random() - 0.5) * 0.3; // Tiny vertical jitter
+        states.projects[i3 + 2] = ringRadius * Math.sin(ringAngle);
+
+        // 4. SKILLS STATE - Exploded Star Dome / Point Sphere Grid
+        const skillsTheta = Math.random() * Math.PI * 2;
+        const skillsPhi = Math.acos((Math.random() * 2) - 1);
+        const skillsRadius = 3.6;
+        states.skills[i3] = skillsRadius * Math.sin(skillsPhi) * Math.cos(skillsTheta);
+        states.skills[i3 + 1] = skillsRadius * Math.sin(skillsPhi) * Math.sin(skillsTheta);
+        states.skills[i3 + 2] = skillsRadius * Math.cos(skillsPhi);
+
+        // 5. EXPERIENCE (JOURNEY) STATE - Cylindrical Tunnel Grid
+        const tunnelTheta = Math.random() * Math.PI * 2;
+        const tunnelRadius = 2.6;
+        states.journey[i3] = tunnelRadius * Math.cos(tunnelTheta);
+        states.journey[i3 + 1] = tunnelRadius * Math.sin(tunnelTheta);
+        states.journey[i3 + 2] = ((i / particleCount) - 0.5) * 24.0; // Long depth tunnel along Z axis
+
+        // 6. CONTACT STATE - Logarithmic Vortex
+        const vortexTheta = (i / particleCount) * Math.PI * 36; // Multi-spiral
+        const vortexRadius = Math.pow((i / particleCount), 0.45) * 5.5;
+        states.contact[i3] = vortexRadius * Math.cos(vortexTheta);
+        states.contact[i3 + 1] = (Math.random() - 0.5) * 0.4;
+        states.contact[i3 + 2] = vortexRadius * Math.sin(vortexTheta);
+    }
+
+    particleStates.push(states.hero, states.about, states.projects, states.skills, states.journey, states.contact);
+}
+
+// --- Camera Animation Paths ---
+const cameraStates = [
+    { pos: new THREE.Vector3(0, 1.8, 6.8), lookAt: new THREE.Vector3(0, -0.6, 0) },   // Hero (Tilted look over the waves)
+    { pos: new THREE.Vector3(-3.2, 0.4, 6.8), lookAt: new THREE.Vector3(1.2, 0, 0) },  // About
+    { pos: new THREE.Vector3(3.2, 2.0, 7.2), lookAt: new THREE.Vector3(-1.0, 0, 0) },   // Projects
+    { pos: new THREE.Vector3(-2.8, -0.5, 6.2), lookAt: new THREE.Vector3(1.0, 0.2, 0) },// Skills
+    { pos: new THREE.Vector3(0, 0, 11.5), lookAt: new THREE.Vector3(0, 0, -4.0) },    // Journey (look deep down Z tunnel)
+    { pos: new THREE.Vector3(0, 0, 7.0), lookAt: new THREE.Vector3(0, 0, 0) }         // Contact
+];
+
+// --- Core WebGL Engine Setup ---
+function initThree() {
+    const canvas = document.getElementById('webgl-canvas');
+
+    // Scene
+    scene = new THREE.Scene();
+    scene.fog = new THREE.FogExp2(0x03030c, 0.04); // Cyber-mist
+
+    // Camera
+    camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+    camera.position.copy(cameraStates[0].pos);
+    camera.lookAt(cameraStates[0].lookAt);
+
+    // Renderer
+    renderer = new THREE.WebGLRenderer({
+        canvas: canvas,
+        alpha: true,
+        antialias: true
+    });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+    // Lights
+    const ambientLight = new THREE.AmbientLight(0xffffff, 0.15);
+    scene.add(ambientLight);
+
+    const dirLight1 = new THREE.DirectionalLight(0x00f0ff, 0.8);
+    dirLight1.position.set(5, 5, 5);
+    scene.add(dirLight1);
+
+    const dirLight2 = new THREE.DirectionalLight(0xbd00ff, 0.8);
+    dirLight2.position.set(-5, -5, 5);
+    scene.add(dirLight2);
+
+    // Particles Setup
+    clock = new THREE.Clock();
+    generateParticleStates();
+
+    // Base geometry starts with HERO coordinates
+    particleGeometry = new THREE.BufferGeometry();
+    const initialPositions = new Float32Array(particleStates[0]);
+    particleGeometry.setAttribute('position', new THREE.BufferAttribute(initialPositions, 3));
+
+    // Material utilizing custom canvas glow texture
+    const particleMaterial = new THREE.PointsMaterial({
+        size: 0.15,
+        sizeAttenuation: true,
+        transparent: true,
+        alphaMap: createGlowTexture(),
+        depthWrite: false,
+        blending: THREE.AdditiveBlending,
+        color: 0xffffff
+    });
+
+    particles = new THREE.Points(particleGeometry, particleMaterial);
+    scene.add(particles);
+
+    // Resize Handler
+    window.addEventListener('resize', onWindowResize);
+}
+
+function onWindowResize() {
+    camera.aspect = window.innerWidth / window.innerHeight;
+    camera.updateProjectionMatrix();
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+
+// --- GSAP Scrolltrigger Bindings ---
+function initScrollTrigger() {
+    gsap.registerPlugin(ScrollTrigger);
+
+    const sections = document.querySelectorAll('section');
+    const numSections = sections.length;
+
+    // Track scroll bar progress and map it to our state machine (scrollState.progress ranges from 0 to numSections - 1)
+    gsap.to(scrollState, {
+        progress: numSections - 1,
+        ease: "none",
+        scrollTrigger: {
+            trigger: "#content-container",
+            start: "top top",
+            end: "bottom bottom",
+            scrub: 1.0,
+            onUpdate: (self) => {
+                // Update header background scroll layout class
+                const header = document.querySelector('header');
+                if (self.scroll() > 50) {
+                    header.classList.add('scrolled');
+                } else {
+                    header.classList.remove('scrolled');
+                }
+
+                // Update scroll progress bar width
+                const scrollProgress = document.getElementById('scroll-progress');
+                scrollProgress.style.width = (self.progress * 100) + '%';
+            }
+        }
+    });
+
+    // Add fading & sliding animations to HTML card overlays
+    sections.forEach((section, idx) => {
+        if (idx === 0) return; // Skip hero section
+
+        const card = section.querySelector('.glass-card') || section.querySelector('.grid') || section.querySelector('.timeline');
+        if (!card) return;
+
+        gsap.fromTo(card, 
+            { opacity: 0, y: 50 },
+            { 
+                opacity: 1, 
+                y: 0, 
+                duration: 1.2, 
+                ease: "power3.out",
+                scrollTrigger: {
+                    trigger: section,
+                    start: "top 75%",
+                    end: "top 35%",
+                    toggleActions: "play none none reverse"
+                }
+            }
+        );
+    });
+}
+
+// --- Optimized Render Loop ---
+function renderLoop() {
+    requestAnimationFrame(renderLoop);
+
+    const elapsedTime = clock.getElapsedTime();
+
+    // Mouse Parallax interpolation
+    mouse.x += (mouse.targetX - mouse.x) * 0.05;
+    mouse.y += (mouse.targetY - mouse.y) * 0.05;
+
+    // Scroll Interpolation States
+    const progress = scrollState.progress;
+    const baseStateIdx = Math.floor(progress);
+    const targetStateIdx = Math.min(baseStateIdx + 1, particleStates.length - 1);
+    const lerpFactor = progress - baseStateIdx;
+
+    // Interpolate Camera Positions & Target LookAt Vectors
+    const currentCamPos = new THREE.Vector3();
+    const currentLookAt = new THREE.Vector3();
+
+    currentCamPos.lerpVectors(cameraStates[baseStateIdx].pos, cameraStates[targetStateIdx].pos, lerpFactor);
+    currentLookAt.lerpVectors(cameraStates[baseStateIdx].lookAt, cameraStates[targetStateIdx].lookAt, lerpFactor);
+
+    // Apply mouse parallax to camera position
+    camera.position.x = currentCamPos.x + mouse.x * 0.4;
+    camera.position.y = currentCamPos.y + mouse.y * 0.4;
+    camera.position.z = currentCamPos.z;
+    camera.lookAt(currentLookAt);
+
+    // Interpolate Particle Coordinates + Add Simplex Simulating Sine Oscillations
+    const posAttribute = particleGeometry.attributes.position;
+    const posArray = posAttribute.array;
+    const baseCoords = particleStates[baseStateIdx];
+    const targetCoords = particleStates[targetStateIdx];
+
+    for (let i = 0; i < particleCount; i++) {
+        const i3 = i * 3;
+
+        let x1 = baseCoords[i3];
+        let y1 = baseCoords[i3 + 1];
+        let z1 = baseCoords[i3 + 2];
+
+        // Apply moving ripple wave specifically for Hero state (idx 0)
+        if (baseStateIdx === 0) {
+            const distance = Math.sqrt(x1 * x1 + z1 * z1);
+            const waveHeight = Math.sin(distance * 0.55 - elapsedTime * 2.4) * 0.45 + Math.cos(x1 * 0.35 + elapsedTime * 1.6) * 0.25;
+            y1 += waveHeight;
+        }
+
+        let x2 = targetCoords[i3];
+        let y2 = targetCoords[i3 + 1];
+        let z2 = targetCoords[i3 + 2];
+
+        if (targetStateIdx === 0) {
+            const distance = Math.sqrt(x2 * x2 + z2 * z2);
+            const waveHeight = Math.sin(distance * 0.55 - elapsedTime * 2.4) * 0.45 + Math.cos(x2 * 0.35 + elapsedTime * 1.6) * 0.25;
+            y2 += waveHeight;
+        }
+
+        // Base linear interpolation between sections
+        let x = x1 + (x2 - x1) * lerpFactor;
+        let y = y1 + (y2 - y1) * lerpFactor;
+        let z = z1 + (z2 - z1) * lerpFactor;
+
+        // Add subtle organic waving for non-Hero sections (when we scroll down)
+        if (baseStateIdx > 0) {
+            const waveFreq = 1.2 + baseStateIdx * 0.2;
+            const waveAmp = 0.05 + Math.sin(elapsedTime * 0.5) * 0.01;
+            const noise = Math.sin(elapsedTime * waveFreq + i * 0.04) * waveAmp;
+            x += noise;
+            y += noise;
+            z += noise;
+        }
+
+        posArray[i3] = x;
+        posArray[i3 + 1] = y;
+        posArray[i3 + 2] = z;
+    }
+    posAttribute.needsUpdate = true;
+
+    // Rotate the particle system as a whole
+    particles.rotation.y = elapsedTime * 0.04;
+    // Add additional rotations depending on the state
+    if (baseStateIdx === 1) {
+        particles.rotation.x = elapsedTime * 0.02; // Twist DNA double helix
+    } else if (baseStateIdx === 5) {
+        particles.rotation.z = elapsedTime * 0.08; // Swirl vortex
+    } else {
+        particles.rotation.x = 0;
+        particles.rotation.z = 0;
+    }
+
+    renderer.render(scene, camera);
+}
+
+// --- Contact Form Submission (FormSubmit.co API) ---
+function initContactForm() {
+    const form = document.getElementById('contact-form');
+    if (!form) return;
+
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+
+        const submitBtn = form.querySelector('.form-submit-btn');
+        const originalBtnHTML = submitBtn.innerHTML;
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `Sending... <i class="fas fa-spinner fa-spin"></i>`;
+
+        const name = document.getElementById('name').value;
+        const email = document.getElementById('email').value;
+        const message = document.getElementById('message').value;
+
+        fetch("https://formsubmit.co/ajax/takshpaneri05@gmail.com", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                message: message
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success === "true" || data.success === true) {
+                showFormAlert("Message sent successfully! FormSubmit will email you once to activate this form.", "success");
+                form.reset();
+            } else {
+                showFormAlert("Something went wrong. Please try again.", "error");
+            }
+        })
+        .catch(error => {
+            console.error(error);
+            showFormAlert("Network error. Please try again.", "error");
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnHTML;
+        });
+    });
+}
+
+
+function showFormAlert(message, type) {
+    const alertBox = document.createElement('div');
+    alertBox.className = `form-alert glass-card ${type === 'success' ? 'alert-success' : 'alert-error'}`;
+    alertBox.style.cssText = `
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        z-index: 9999;
+        padding: 1.2rem 2rem;
+        border-radius: 12px;
+        font-family: var(--font-primary);
+        font-size: 0.95rem;
+        font-weight: 600;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        transform: translateY(100px);
+        opacity: 0;
+        transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.4s;
+        pointer-events: auto;
+    `;
+
+    if (type === 'success') {
+        alertBox.style.borderColor = 'var(--color-cyan)';
+        alertBox.style.boxShadow = '0 10px 30px rgba(0, 240, 255, 0.2)';
+        alertBox.innerHTML = `<i class="fas fa-check-circle" style="color: var(--color-cyan); margin-right: 0.8rem;"></i> ${message}`;
+    } else {
+        alertBox.style.borderColor = 'var(--color-magenta)';
+        alertBox.style.boxShadow = '0 10px 30px rgba(255, 0, 122, 0.2)';
+        alertBox.innerHTML = `<i class="fas fa-exclamation-circle" style="color: var(--color-magenta); margin-right: 0.8rem;"></i> ${message}`;
+    }
+
+    document.body.appendChild(alertBox);
+
+    setTimeout(() => {
+        alertBox.style.transform = 'translateY(0)';
+        alertBox.style.opacity = '1';
+    }, 50);
+
+    setTimeout(() => {
+        alertBox.style.transform = 'translateY(100px)';
+        alertBox.style.opacity = '0';
+        setTimeout(() => {
+            alertBox.remove();
+        }, 400);
+    }, 6000);
+}
+
+// --- Start Application ---
+window.addEventListener('DOMContentLoaded', () => {
+    initCursor();
+    initMobileNav();
+    initModals();
+    initContactForm();
+    initThree();
+    initScrollTrigger();
+    renderLoop();
+});
+
+const roles = [
+  "MERN Stack Developer",
+  "AR/VR Developer",
+  "WebGL Enthusiast",
+  "Google Student Ambassador",
+  "AI Explorer",
+  "Hackathon Winner"
+];
+
+let roleIndex = 0;
+let charIndex = 0;
+let deleting = false;
+
+const typedText = document.getElementById("typed-text");
+
+function typeEffect() {
+
+    const currentWord = roles[roleIndex];
+
+    if(!deleting){
+        typedText.textContent =
+            currentWord.substring(0,charIndex+1);
+
+        charIndex++;
+
+        if(charIndex === currentWord.length){
+            deleting = true;
+            setTimeout(typeEffect,1500);
+            return;
+        }
+
+    }else{
+
+        typedText.textContent =
+            currentWord.substring(0,charIndex-1);
+
+        charIndex--;
+
+        if(charIndex === 0){
+            deleting = false;
+            roleIndex =
+                (roleIndex + 1) % roles.length;
+        }
+    }
+
+    setTimeout(typeEffect,deleting ? 50 : 100);
+}
+
+typeEffect();
+</script>
+</body>
+
+</html>
